@@ -1,5 +1,5 @@
-# wheat area migration(RF-area)
-# This code is for RF-area model training and simulation
+# wheat Yield migration(RF-yield)
+# This code is for RF-yield model training and simulation
 
 
 
@@ -14,7 +14,7 @@ library(data.table)
 ## step1 : model training & evaluation ===================
 
 ### import data
-f <- fread('.../RF-AREA.csv')
+f <- fread('.../RF-Yield.csv')
 
 data <-  f  
 
@@ -40,10 +40,10 @@ for (i in 1:5){
   print(i)
   train <- data[-cvlist[[i]], ]
   test <- data[cvlist[[i]], ]
-  fit <- randomForest(AREA~., train, importance=TRUE, mtry = 3, ntree=500)
+  fit <- randomForest(Yield~., train, importance=TRUE, mtry = 3, ntree=500)
   importance(fit)
   train.pre <-  predict(fit, test)
-  tem <- data.frame(obs = test$AREA, pred = train.pre)
+  tem <- data.frame(obs = test$Yield, pred = train.pre)
   out1 <- rbind(out1, tem)
 }
 
@@ -61,12 +61,11 @@ print(paste0('r2: ', rsq, '  RMSE: ', rmse,'  NRMSE: ', Nrmse, '%'))
 ## step2 : OPD simulation ============
 
 
-fit <- randomForest(AREA ~ ., data, importance = TRUE, mtry = 3, ntree = 500)
+fit <- randomForest(Yield ~ ., data, importance = TRUE, mtry = 3, ntree = 500)
 
 new_data <-  read_excel(".../predicteddara1-6-24.xlsx")
 
 predictions <- predict(fit, new_data)
-
 
 
 
